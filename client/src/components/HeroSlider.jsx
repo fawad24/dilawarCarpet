@@ -17,7 +17,7 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative w-full h-[180px] sm:h-[400px] md:h-[300px] lg:h-[500px] mt-36 sm:mt-44 overflow-hidden shadow-2xl rounded-full">
+    <section className="relative w-full h-[180px] sm:h-[400px] md:h-[300px] lg:h-[500px] mt-40 sm:mt-48 overflow-hidden shadow-2xl rounded-full">
       
       <div className="flex w-full h-full shadow">
         {imageSets[current].map((img, idx) => (
