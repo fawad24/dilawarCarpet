@@ -1,0 +1,188 @@
+import React, { createContext, useContext, useState } from "react";
+
+// Context oluştur
+const TranslationContext = createContext();
+
+// Çeviri verisi
+const translations = {
+  en: {
+     noOrders: "You have no orders yet.",
+  myOrders: "My Orders",
+  paymentNo: "Payment No",
+  total: "Total",
+  payment: "Payment",
+  approved: "Approved",
+  pending: "Pending",
+  status: "Status",
+  preparing: "Preparing",
+  shipped: "Shipped",
+  delivered: "Delivered",
+  quantity: "pcs",
+    addedToCart: "added to cart",
+    productNotFound: "Product not found",
+    addToCart: "Add to Cart",
+    cart: "Cart",
+    quantity: "Quantity",
+    noProducts: "No products in your cart.",
+    myOrders: "My Orders",
+    loading: "Loading...",
+    noOrders: "No orders yet.",
+    payment: "Payment",
+    paid: "Paid",
+    pending: "Pending",
+    deliveryStatus: "Delivery Status",
+    preparing: "Preparing",
+    shipped: "Shipped",
+    delivered: "Delivered",
+    name: "Name",
+    products: "Products",
+    logout: "Logout",
+    orders: "Orders",
+    myInfo: "My information",
+    Home: "Home",
+    Hi: "Hi",
+    firstName: "First Name",
+    lastName: "Last Name",
+    email: "Email",
+    phone: "Phone",
+    address: "Address",
+      loading: "Loading...",
+    mustLogin: "You must login",
+     cartEmpty: "Your cart is empty 🛍️",
+    myCart: "Your Cart",
+    delete: "Delete",
+    clearCart: "Clear Cart",
+    checkout: "Proceed to Checkout",
+    product: "Product",
+    addToCart: "Add to Cart",
+addedToCart: "added to cart",
+loginRequired: "Please log in or sign up first!",
+currency: "TRY",
+ orderSummary: "Order Summary",
+    paymentMethod: "Payment Method",
+    payWithIban: "Pay with IBAN",
+    payAtDoor: "Pay at Door",
+    ibanInfo: "IBAN Information",
+    ibanDescription: "Description: Order Email",
+    confirmOrder: "Confirm Order",
+    orderSuccess: "Order placed successfully ✅",
+    orderFailed: "Failed to place order ❌",
+    genericError: "Something went wrong!",
+    mustLogin: "Please log in first",
+    currency: "TRY",
+
+     // MyOrders
+    myOrders: "My Orders",
+    orderNumber: "Order No",
+    noOrders: "No orders yet.",
+    payment: "Payment",
+    confirmed: "Confirmed",
+    pending: "Pending",
+    deliveryStatus: "Delivery Status",
+    preparing: "Preparing",
+    shipped: "Shipped",
+    delivered: "Delivered",
+  },
+
+
+  tr: {
+    noOrders: "Henüz siparişiniz yok.",
+  myOrders: "Siparişlerim",
+  paymentNo: "Ödeme No",
+  total: "Toplam",
+  payment: "Ödeme",
+  approved: "Onaylandi",
+  pending: "Bekliyor",
+  status: "Durum",
+  preparing: "Hazırlanıyor",
+  shipped: "Kargoya verildi",
+  delivered: "Teslim edildi",
+  quantity: "adet",
+    addedToCart: "sepete eklendi",
+    productNotFound: "Ürün bulunamadı",
+    addToCart: "Sepete Ekle",
+    cart: "Sepet",
+    quantity: "Adet",
+    noProducts: "Sepetinizde ürün yok.",
+    myOrders: "Siparişlerim",
+    loading: "Yükleniyor...",
+    noOrders: "Henüz sipariş yok.",
+    payment: "Ödeme",
+    paid: "Ödendi",
+    pending: "Beklemede",
+    deliveryStatus: "Kargo Durumu",
+    preparing: "Hazırlanıyor",
+    shipped: "Kargoya Verildi",
+    delivered: "Teslim Edildi",
+    name: "İsim",
+    address: "Adres",
+    phone: "Telefon",
+    products: "Ürünler",
+    logout: "Çıkış Yap",
+    orders: "Siparişler",
+    myInfo: "Bilgilerim",
+    Home: "Ana sayfa",
+    Hi: "Merhaba",
+      loading: "Yükleniyor...",
+    mustLogin: "Giriş yapmalısınız",
+     firstName: "İsim",
+    lastName: "Soyisim",
+    email: "Email",
+    phone: "Telefon",
+    address: "Adres",
+     cartEmpty: "Sepetiniz boş 🛍️",
+    myCart: "Sepetiniz",
+    
+    delete: "Sil",
+    clearCart: "Sepeti Temizle",
+    checkout: "Ödemeye Geç",
+    product: "Ürün",
+    addToCart: "Sepete Ekle",
+      addedToCart: "sepete eklendi",
+     loginRequired: "Önce giriş yapmalısınız veya kayıt olun!",
+     currency: "TL",
+         orderSummary: "Sipariş Özeti",
+    paymentMethod: "Ödeme Yöntemi",
+    payWithIban: "IBAN ile ödeme",
+    payAtDoor: "Kapıda ödeme",
+    ibanInfo: "IBAN Bilgisi",
+    ibanDescription: "Açıklama: Sipariş Email",
+    confirmOrder: "Siparişi Onayla",
+    orderSuccess: "Sipariş alındı ✅",
+    orderFailed: "Sipariş oluşturulamadı ❌",
+    genericError: "Bir hata oluştu!",
+    mustLogin: "Lütfen giriş yapın",
+    currency: "₺",
+
+     myOrders: "Siparişlerim",
+    orderNumber: "Sipariş No",
+    noOrders: "Henüz siparişiniz yok.",
+    payment: "Ödeme",
+    confirmed: "Onaylandı",
+    pending: "Bekliyor",
+    deliveryStatus: "Kargo Durumu",
+    preparing: "Hazırlanıyor",
+    shipped: "Kargoya Verildi",
+    delivered: "Teslim Edildi",
+
+  },
+};
+
+// Provider
+export const TranslationProvider = ({ children }) => {
+  const [lang, setLang] = useState("tr"); // default TR
+
+  const t = (key) => translations[lang][key] || key;
+
+  const toggleLanguage = () => setLang((prev) => (prev === "tr" ? "en" : "tr"));
+
+  return (
+    <TranslationContext.Provider value={{ t, lang, toggleLanguage }}>
+      {children}
+    </TranslationContext.Provider>
+  );
+};
+
+// Hook kullanımı
+export const useTranslation = () => useContext(TranslationContext);
+console.log("TranslationContext loaded");

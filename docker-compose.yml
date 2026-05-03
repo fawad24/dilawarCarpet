@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend
+    container_name: hali-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    restart: always
+    command: node index.js
+    volumes:
+      - ./backend/uploads:/app/uploads
+    
+    
+
+  frontend:
+    build:
+      context: ./client
+    container_name: hali-frontend
+    ports:
+      - "5173:80"
+    restart: always
