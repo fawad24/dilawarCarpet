@@ -12,15 +12,12 @@ export default function ProductCard({ product }) {
   const { addToCart } = useContext(CartContext);
   const { user } = useContext(AuthContext); // 🔹 user al
   const { t } = useTranslation();
-  const BASE_URL = import.meta.env.VITE_API_URL.replace("/api", "");
-
+ const BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
   const imageUrl =
   product.images?.length > 0
-    ? `${BASE_URL}${product.images[0]}`
-    : product.image?.length > 0
-    ? `${BASE_URL}${product.image[0]}`
+    ? `${BASE_URL}/${product.images[0].replace(/^\/?/, "")}`
     : "/no-image.png";
-     
+
   const handleAddToCart = () => {
     if (!user) {
       toast.error(t(UI_TEXT.loginRequired));
