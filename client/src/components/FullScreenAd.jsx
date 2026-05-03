@@ -25,13 +25,18 @@ export default function FullScreenAd({ videos, onClose }) {
   return (
     <div className="fixed inset-0 z-50 bg-black flex items-center justify-center shadow">
       <video
-        key={currentIndex}
-        src={videos[currentIndex]}
-        autoPlay
-        muted
-        onEnded={handleVideoEnd}
-        className="w-full h-full object-cover"
-      />
+  key={currentIndex}
+  src={videos[currentIndex]}
+  autoPlay
+  muted
+  playsInline
+  webkit-playsinline="true"
+  preload="auto"
+  controls={false}
+  disablePictureInPicture
+  onEnded={handleVideoEnd}
+  className="w-full h-full object-cover"
+/>
       <button
         onClick={handleClose}
         className="absolute top-4 right-4 bg-gray-800 bg-opacity-50 text-white px-3 py-1 rounded hover:bg-opacity-80"
