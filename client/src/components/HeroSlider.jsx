@@ -17,7 +17,7 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative w-full h-[180px] sm:h-[400px] md:h-[300px] lg:h-[500px] mt-32 sm:mt-36 overflow-hidden shadow-2xl rounded-full">
+    <section className="relative w-full h-[180px] sm:h-[400px] md:h-[300px] lg:h-[500px] mt-32 sm:mt-40 overflow-hidden shadow-2xl rounded-full">
       
       <div className="flex w-full h-full shadow">
         {imageSets[current].map((img, idx) => (
@@ -35,7 +35,7 @@ export default function HeroSlider() {
       {/* Yazı */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 z-10 shadow">
         <h1 className="w-full text-center lg:text-8xl text-3xl sm:text-9xl md:text-6xl drop-shadow-lg">
-          D I L A W A Rtest4 <span className="text-blue-500">C A R P E T</span>
+          D I L A W A R <span className="text-blue-500">C A R P E T</span>
         </h1>
       </div>
 

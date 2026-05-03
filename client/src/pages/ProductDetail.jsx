@@ -31,7 +31,7 @@ function ProductDetail() {
 
   return (
     <div className=" mt-10 lg:mt-16 md:mt-24 max-w-6xl mx-auto p-3 md:p-5 pt-6 md:pt-16 grid md:grid-cols-2 gap-5 md:gap-10 bg-slate-200 rounded-3xl shadow">
-      <div className="relative lg:mt-2 mt-10 w-full max-w-72 md:max-w-96 mx-auto md:mx-14 h-[350px] md:h-[550px] flex items-center justify-center bg-slate-200 rounded-xl hover:scale-110">
+      <div className="relative lg:mt-2 mt-14 w-full max-w-72 md:max-w-96 mx-auto md:mx-14 h-[350px] md:h-[550px] flex items-center justify-center bg-slate-200 rounded-xl hover:scale-110">
         <img
           src={
             product.images && product.images.length > 0

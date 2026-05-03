@@ -140,14 +140,19 @@ const mobileRef = useRef(null);
 
       {/* MOBILE ALT MENU (ŞEFFAF BAR + STYLED BUTTONS) */}
 
-     <div className="sm:hidden fixed top-[60px] left-0 w-full z-40 py-3 overflow-hidden">
+     <div className="sm:hidden fixed top-[60px] left-0 w-full z-40 py-4 overflow-hidden">
   {/* 🎥 VIDEO BACKGROUND */}
   <video
-    autoPlay
-    loop
-    muted
-    className="absolute top-0 left-0 w-full h-full object-cover"
-  >
+  autoPlay
+  loop
+  muted
+  playsInline
+  webkit-playsinline="true"
+  preload="auto"
+  disablePictureInPicture
+  controls={false}
+  className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
+>
     <source src="/videos/reklam1.mp4" type="video/mp4" />
   </video>
 

@@ -4,6 +4,7 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_URL;
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Admin login ile siparişleri çek
@@ -118,7 +119,7 @@ export default function AdminOrders() {
                 {/* Ürün resmi */}
                 {item.images && item.images.length > 0 && (
                   <img
-                    src={item.images[0]}
+                    src={`${BASE_URL}${item.images[0]}`}
                     alt={item.name}
                     className="w-12 h-12 object-contain rounded border"
                   />
