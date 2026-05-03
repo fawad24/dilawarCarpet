@@ -35,7 +35,7 @@ export default function HeroSlider() {
       {/* Yazı */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 z-10 shadow">
         <h1 className="w-full text-center lg:text-8xl text-3xl sm:text-9xl md:text-6xl drop-shadow-lg">
-          D I L A W A Rtest1 <span className="text-blue-500">C A R P E T</span>
+          D I L A W A Rtest2 <span className="text-blue-500">C A R P E T</span>
         </h1>
       </div>
 

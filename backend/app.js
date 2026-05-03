@@ -39,8 +39,9 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-    "http://158.180.32.235:5173"
+    "http://158.180.32.235",
+    "http://158.180.32.235:5173",
+    "http://localhost:5173"
   ],
   credentials: true,
 }));
