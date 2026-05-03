@@ -14,7 +14,7 @@ export default function ProductList() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/products/${id}`, {
+      const res = await fetch(`${API_URL}/api/products/${id}`, {
         method: "DELETE",
         credentials: "include", // 🔥 auth ile uyumlu
       });
