@@ -3,19 +3,32 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { firstName,lastName, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
+
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email zaten kayıtlı" });
+
+    if (existingUser)
+      return res.status(400).json({
+        message: "Email zaten kayıtlı",
+      });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({ firstName, lastName,email, password: hashedPassword });
+    const user = await User.create({
+      name: `${firstName} ${lastName}`,
+      email,
+      password: hashedPassword,
+    });
 
     res.status(201).json({ user });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Kayıt başarısız" });
+
+    res.status(500).json({
+      message: "Kayıt başarısız",
+      error: err.message,
+    });
   }
 };
 

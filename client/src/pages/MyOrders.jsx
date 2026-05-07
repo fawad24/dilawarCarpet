@@ -31,7 +31,7 @@ export default function MyOrders() {
   if (orders.length === 0) return <p className="p-6">{t(UI_TEXT.noOrders)}</p>;
 
   return (
-    <div className="lg:p-20 p-3 space-y-7 bg-slate-200">
+    <div className="lg:p-20 p-8 space-y-7 bg-slate-200">
       <h1 className="text-2xl py-2 mt-24 font-bold mb-4 text-center rounded-3xl bg-slate-50 shadow">{t(UI_TEXT.myOrders)}</h1>
 
       {orders.map(order => (
