@@ -118,17 +118,19 @@ export default function AdminOrders() {
               >
                 {/* Ürün resmi */}
                 {item.images && item.images.length > 0 && (
-                  <img
-                    src={
+                 <img
+  src={
     item.images?.length > 0
       ? item.images[0].startsWith("http")
         ? item.images[0]
-        : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
+        : `${BASE_URL}/uploads/${item.images[0]
+            .split("/uploads/")
+            .pop()}`
       : "/no-image.png"
   }
-                    alt={item.name}
-                    className="w-12 h-12 object-contain rounded border"
-                  />
+  alt={item.name}
+  className="w-12 h-12 object-contain rounded border"
+/>
                 )}
                 {/* Ürün adı ve miktar */}
                 <span>

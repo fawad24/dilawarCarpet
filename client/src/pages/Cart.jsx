@@ -34,15 +34,17 @@ export default function Cart() {
             className="flex items-center justify-between bg-slate-100 shadow p-2 md:p-4 rounded-3xl"
           >
             <div className="flex items-center gap-4">
-              <img
-                 src={
-    item.images && item.images.length > 0
-      ? `${BASE_URL}${item.images[0]}`
+             <img
+  src={
+    item.images?.length > 0
+      ? item.images[0].startsWith("http")
+        ? item.images[0]
+        : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
       : "/no-image.png"
   }
-                alt={item.name || t(UI_TEXT.product)}
-                className="w-14 h-14 md:w-20 md:h-20 object-contain"
-              />
+  alt={item.name || t(UI_TEXT.product)}
+  className="w-14 h-14 md:w-20 md:h-20 object-contain"
+/>
               <div>
                 <h3 className="font-bold">{item.name}</h3>
                 <p className="text-blue-500">

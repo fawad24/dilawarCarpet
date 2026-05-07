@@ -51,9 +51,9 @@ export default function MyOrders() {
             {order.items.map((item, index) => (
               <div key={index} className="flex items-center gap-4 text-sm text-gray-700">
                 {/* Ürün resmi */}
-               <img
+              <img
   src={
-    item.images?.length > 0
+    Array.isArray(item.images) && item.images.length > 0
       ? item.images[0].startsWith("http")
         ? item.images[0]
         : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
