@@ -49,7 +49,7 @@ const imageUrl = product.images?.length
 
       <button
         onClick={handleAddToCart}
-        className="mt-auto bg-slate-50 font-bold text-black px-4 py-2 rounded-2xl shadow hover:bg-white transition"
+        className="mt-auto bg-slate-50 font-bold text-lime-400 px-4 py-2 rounded-2xl shadow hover:bg-white transition"
       >
         {t(UI_TEXT.addToCart)}
       </button>
