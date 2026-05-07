@@ -51,15 +51,17 @@ export default function MyOrders() {
             {order.items.map((item, index) => (
               <div key={index} className="flex items-center gap-4 text-sm text-gray-700">
                 {/* Ürün resmi */}
-                <img
-                  src={
-  item.images?.length > 0
-    ? `${BASE_URL}${item.images[0]}`
-    : "/no-image.png"
-}
-                  alt={item.name}
-                  className="w-12 h-12 object-cover rounded border"
-                />
+               <img
+  src={
+    item.images?.length > 0
+      ? item.images[0].startsWith("http")
+        ? item.images[0]
+        : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
+      : "/no-image.png"
+  }
+  alt={item.name}
+  className="w-12 h-12 object-cover rounded border"
+/>
                 {/* Ürün adı ve miktar */}
                 <span className="bg-slate-50 font-bold rounded-3xl shadow py-1 px-2 text-teal-950">
                   • {item.name} ({item.quantity} quantity)

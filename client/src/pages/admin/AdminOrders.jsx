@@ -119,7 +119,13 @@ export default function AdminOrders() {
                 {/* Ürün resmi */}
                 {item.images && item.images.length > 0 && (
                   <img
-                    src={`${BASE_URL}${item.images[0]}`}
+                    src={
+    item.images?.length > 0
+      ? item.images[0].startsWith("http")
+        ? item.images[0]
+        : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
+      : "/no-image.png"
+  }
                     alt={item.name}
                     className="w-12 h-12 object-contain rounded border"
                   />

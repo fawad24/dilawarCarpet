@@ -7,6 +7,7 @@ import { UI_TEXT } from "../config/uiText";
 export default function Cart() {
   const { cart, removeFromCart, clearCart } = useContext(CartContext);
   const { t } = useTranslation();
+  const BASE_URL = import.meta.env.VITE_API_URL;
   
 
   if (!cart || cart.length === 0) {
@@ -34,7 +35,11 @@ export default function Cart() {
           >
             <div className="flex items-center gap-4">
               <img
-                src={item.images && item.images.length > 0 ? item.images[0] : "/no-image.png"}
+                 src={
+    item.images && item.images.length > 0
+      ? `${BASE_URL}${item.images[0]}`
+      : "/no-image.png"
+  }
                 alt={item.name || t(UI_TEXT.product)}
                 className="w-14 h-14 md:w-20 md:h-20 object-contain"
               />
