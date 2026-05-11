@@ -53,10 +53,12 @@ export default function MyOrders() {
                 {/* Ürün resmi */}
               <img
   src={
-    Array.isArray(item.images) && item.images.length > 0
+    item.images?.length > 0
       ? item.images[0].startsWith("http")
         ? item.images[0]
-        : `${BASE_URL}${item.images[0].startsWith("/") ? "" : "/"}${item.images[0]}`
+        : `${BASE_URL}/uploads/${item.images[0]
+            .split("/uploads/")
+            .pop()}`
       : "/no-image.png"
   }
   alt={item.name}
