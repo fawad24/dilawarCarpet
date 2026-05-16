@@ -28,6 +28,7 @@ function ProductDetail() {
   if (!product) {
     return <div className="p-8">{t(UI_TEXT.productNotFound)}</div>;
   }
+  // kurbann
   //kurban
   // 🔥 Kurban Bayramı indirimi
   const DISCOUNT = 4000;
