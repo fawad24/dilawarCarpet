@@ -20,14 +20,14 @@ export default function Cart() {
     );
   }
 
-  // 🔥 İndirimli toplam
+  // 🔥 İndirimli toplam (satış fiyatı)
   const total = cart.reduce(
     (sum, item) =>
       sum + (item.price || 0) * (item.quantity || 1),
     0
   );
 
-  // 🔥 Eski toplam fiyat
+  // 🔥 Eski toplam (indirimsiz)
   const originalTotal = cart.reduce(
     (sum, item) =>
       sum +
@@ -38,21 +38,21 @@ export default function Cart() {
 
   return (
     <div className="mt-36 md:mt-32 max-w-5xl mx-4 p-4 md:p-28 rounded-2xl shadow bg-slate-200">
-      
+
       <h1 className="text-2xl text-slate-800 font-semibold mb-4 text-center">
         {t(UI_TEXT.myCart)}
       </h1>
 
       <div className="space-y-4 border rounded-3xl shadow bg-slate-50 p-3">
-        
+
         {cart.map((item) => (
           <div
             key={item.id || item._id}
             className="flex items-center justify-between bg-slate-100 shadow p-2 md:p-4 rounded-3xl"
           >
-            
+
             <div className="flex items-center gap-4">
-              
+
               <img
                 src={
                   item.images?.length > 0
@@ -68,11 +68,12 @@ export default function Cart() {
               />
 
               <div>
+
                 <h3 className="font-bold">
                   {item.name}
                 </h3>
 
-                {/* 🔥 Eski fiyat */}
+                {/* 🔥 SADECE varsa eski fiyat */}
                 {item.originalPrice && (
                   <p className="text-gray-400 line-through text-sm">
                     {item.originalPrice.toLocaleString(
@@ -86,7 +87,7 @@ export default function Cart() {
                   </p>
                 )}
 
-                {/* 🔥 Yeni fiyat */}
+                {/* 🔥 HER ZAMAN satış fiyatı */}
                 <p className="text-red-500 font-bold">
                   {item.price.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
@@ -95,10 +96,13 @@ export default function Cart() {
                   ₺ x {item.quantity}
                 </p>
 
-                {/* 🔥 İndirim etiketi */}
-                <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  Kurban Bayramı İndirimi
-                </span>
+                {/* 🔥 indirim etiketi sadece varsa */}
+                {item.originalPrice && (
+                  <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    Kurban Bayramı İndirimi
+                  </span>
+                )}
+
               </div>
             </div>
 
@@ -110,23 +114,25 @@ export default function Cart() {
             >
               {t(UI_TEXT.delete)}
             </button>
+
           </div>
         ))}
       </div>
 
+      {/* 🔥 TOTAL */}
       <div className="mt-4 md:mt-6 flex flex-col md:flex-row gap-3 justify-between items-center border-t pt-4">
-        
-        {/* 🔥 Toplam fiyat alanı */}
+
         <div className="bg-slate-50 px-4 py-3 rounded-2xl shadow text-center">
-          
+
           {/* Eski toplam */}
-          <p className="text-gray-400 line-through text-sm">
-            {originalTotal.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{" "}
-            ₺
-          </p>
+          {originalTotal > total && (
+            <p className="text-gray-400 line-through text-sm">
+              {originalTotal.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} ₺
+            </p>
+          )}
 
           {/* Yeni toplam */}
           <h2 className="text-xl font-bold text-red-500">
@@ -134,13 +140,13 @@ export default function Cart() {
             {total.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            })}{" "}
-            ₺
+            })} ₺
           </h2>
+
         </div>
 
         <div className="flex flex-col md:flex-row gap-2 md:gap-3 w-full md:w-auto">
-          
+
           <button
             onClick={clearCart}
             className="bg-slate-50 text-red-500 px-3 md:px-4 py-2 font-bold rounded-3xl shadow hover:bg-white w-full md:w-auto"
@@ -159,6 +165,7 @@ export default function Cart() {
           >
             {t(UI_TEXT.checkout)}
           </Link>
+
         </div>
       </div>
     </div>
