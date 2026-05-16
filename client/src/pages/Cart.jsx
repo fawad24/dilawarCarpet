@@ -5,11 +5,8 @@ import { useTranslation } from "../context/TranslationContext";
 import { UI_TEXT } from "../config/uiText";
 
 export default function Cart() {
-  const { cart, removeFromCart, clearCart } =
-    useContext(CartContext);
-
+  const { cart, removeFromCart, clearCart } = useContext(CartContext);
   const { t } = useTranslation();
-
   const BASE_URL = import.meta.env.VITE_API_URL;
 
   if (!cart || cart.length === 0) {
@@ -20,19 +17,8 @@ export default function Cart() {
     );
   }
 
-  // 🔥 İndirimli toplam (satış fiyatı)
   const total = cart.reduce(
-    (sum, item) =>
-      sum + (item.price || 0) * (item.quantity || 1),
-    0
-  );
-
-  // 🔥 Eski toplam (indirimsiz)
-  const originalTotal = cart.reduce(
-    (sum, item) =>
-      sum +
-      ((item.originalPrice || item.price) *
-        (item.quantity || 1)),
+    (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0
   );
 
@@ -43,7 +29,7 @@ export default function Cart() {
         {t(UI_TEXT.myCart)}
       </h1>
 
-      <div className="space-y-4 border rounded-3xl shadow bg-slate-50 p-3">
+      <div className="space-y-4 border rounded-3xl shadow bg-slate-50">
 
         {cart.map((item) => (
           <div
@@ -68,48 +54,25 @@ export default function Cart() {
               />
 
               <div>
+                <h3 className="font-bold">{item.name}</h3>
 
-                <h3 className="font-bold">
-                  {item.name}
-                </h3>
-
-                {/* 🔥 SADECE varsa eski fiyat */}
+                {/* 🔥 ESKİ FİYAT (üstü çizili) */}
                 {item.originalPrice && (
                   <p className="text-gray-400 line-through text-sm">
-                    {item.originalPrice.toLocaleString(
-                      "en-US",
-                      {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }
-                    )}{" "}
-                    ₺
+                    {item.originalPrice} ₺
                   </p>
                 )}
 
-                {/* 🔥 HER ZAMAN satış fiyatı */}
+                {/* 🔥 İNDİRİMLİ FİYAT */}
                 <p className="text-red-500 font-bold">
-                  {item.price.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  ₺ x {item.quantity}
+                  {item.price} ₺ x {item.quantity}
                 </p>
-
-                {/* 🔥 indirim etiketi sadece varsa */}
-                {item.originalPrice && (
-                  <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    Kurban Bayramı İndirimi
-                  </span>
-                )}
 
               </div>
             </div>
 
             <button
-              onClick={() =>
-                removeFromCart(item.id || item._id)
-              }
+              onClick={() => removeFromCart(item.id || item._id)}
               className="bg-red-500 text-white px-3 md:px-10 py-1 rounded-2xl shadow hover:bg-red-600 transition"
             >
               {t(UI_TEXT.delete)}
@@ -117,33 +80,14 @@ export default function Cart() {
 
           </div>
         ))}
+
       </div>
 
-      {/* 🔥 TOTAL */}
       <div className="mt-4 md:mt-6 flex flex-col md:flex-row gap-3 justify-between items-center border-t pt-4">
 
-        <div className="bg-slate-50 px-4 py-3 rounded-2xl shadow text-center">
-
-          {/* Eski toplam */}
-          {originalTotal > total && (
-            <p className="text-gray-400 line-through text-sm">
-              {originalTotal.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })} ₺
-            </p>
-          )}
-
-          {/* Yeni toplam */}
-          <h2 className="text-xl font-bold text-red-500">
-            {t(UI_TEXT.total)}:{" "}
-            {total.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ₺
-          </h2>
-
-        </div>
+        <h2 className="text-lg md:text-xl font-bold px-3 py-1 rounded-2xl shadow bg-slate-50">
+          {t(UI_TEXT.total)}: {total} ₺
+        </h2>
 
         <div className="flex flex-col md:flex-row gap-2 md:gap-3 w-full md:w-auto">
 

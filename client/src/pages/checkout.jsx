@@ -16,27 +16,19 @@ export default function Checkout() {
 
   const [paymentMethod, setPaymentMethod] = useState("iban");
 
-  // 🔥 SAFE CART
-  const safeCart = Array.isArray(cart) ? cart : [];
+  const total = cart.reduce(
+    (sum, item) =>
+      sum + (item.price || 0) * (item.quantity || 1),
+    0
+  );
 
-  // 🔥 TOTAL (CRASH SAFE)
-  const total = safeCart.reduce((sum, item) => {
-    const price =
-      Number(item.price ?? item.productId?.price ?? 0);
-
-    const qty = Number(item.quantity ?? 1);
-
-    return sum + price * qty;
-  }, 0);
-
-  const originalTotal = safeCart.reduce((sum, item) => {
-    const price =
-      Number(item.originalPrice ?? item.price ?? item.productId?.price ?? 0);
-
-    const qty = Number(item.quantity ?? 1);
-
-    return sum + price * qty;
-  }, 0);
+  const originalTotal = cart.reduce(
+    (sum, item) =>
+      sum +
+      ((item.originalPrice || item.price) *
+        (item.quantity || 1)),
+    0
+  );
 
   const handleOrder = async () => {
     try {
@@ -45,21 +37,30 @@ export default function Checkout() {
         return;
       }
 
-      const items = safeCart
+      const items = cart
         .map((item) => {
-          const product = item.productId || item;
+          if (item._id && item.name && item.price) {
+            return {
+              productId: item._id,
+              name: item.name,
+              price: item.price,
+              originalPrice: item.originalPrice || item.price,
+              quantity: item.quantity || 1,
+            };
+          }
 
-          if (!product) return null;
+          if (item.productId && item.productId._id) {
+            return {
+              productId: item.productId._id,
+              name: item.productId.name,
+              price: item.price || item.productId.price,
+              originalPrice:
+                item.originalPrice || item.productId.price,
+              quantity: item.quantity || 1,
+            };
+          }
 
-          return {
-            productId: product._id || item._id,
-            name: product.name || item.name || "Product",
-            price: Number(item.price ?? product.price ?? 0),
-            originalPrice: Number(
-              item.originalPrice ?? product.price ?? item.price ?? 0
-            ),
-            quantity: Number(item.quantity ?? 1),
-          };
+          return null;
         })
         .filter(Boolean);
 
@@ -106,62 +107,130 @@ export default function Checkout() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-28 p-4 bg-slate-200 shadow rounded-2xl">
+    <div className="max-w-4xl lg:mx-auto mx-4 mt-28 lg:p-8 p-2 bg-slate-200 shadow rounded-2xl">
 
       <h1 className="text-2xl font-bold mb-6">
         🧾 {t(UI_TEXT.orderSummary)}
       </h1>
 
-      {safeCart.map((item, i) => {
-        const price = Number(item.price ?? 0);
-        const qty = Number(item.quantity ?? 1);
+      {cart.map((item) => (
+        <div
+          key={item._id}
+          className="border-b py-3 px-3 flex justify-between items-center bg-slate-50 rounded-3xl shadow font-bold mb-2"
+        >
+          <div>
+            <span className="block">
+              {item.name} × {item.quantity}
+            </span>
 
-        return (
-          <div
-            key={item._id || i}
-            className="flex justify-between bg-slate-50 p-3 rounded-3xl shadow mb-2"
-          >
-            <div>
-              <p className="font-bold">
-                {item.name ?? item.productId?.name ?? "Product"}
-              </p>
+            {/* 🔥 ESKİ FİYAT (üstü çizili) */}
+            {item.originalPrice && (
+              <span className="text-gray-400 line-through text-sm block">
+                {item.originalPrice.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })} ₺
+              </span>
+            )}
 
-              <p className="text-sm text-gray-400">
-                {(item.originalPrice ?? 0) > price && (
-                  <span className="line-through">
-                    {item.originalPrice} ₺
-                  </span>
-                )}
-              </p>
-
-              <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full">
+            {/* 🔥 İNDİRİM ETİKETİ */}
+            {item.originalPrice && (
+              <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                 Kurban Bayramı İndirimi
               </span>
-            </div>
-
-            <div className="text-red-500 font-bold">
-              {(price * qty).toLocaleString("tr-TR")} ₺
-            </div>
+            )}
           </div>
-        );
-      })}
 
-      <div className="mt-4 bg-slate-50 p-4 rounded-3xl shadow">
-        <p className="text-gray-400 line-through">
-          {originalTotal.toLocaleString("tr-TR")} ₺
-        </p>
+          {/* 🔥 YENİ FİYAT */}
+          <span className="text-red-500 font-bold text-lg">
+            {item.price.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} ₺
+          </span>
+        </div>
+      ))}
 
+      {/* 🔥 TOTAL */}
+      <div className="mt-4 bg-slate-50 rounded-3xl shadow px-4 py-4">
+
+        {/* eski toplam */}
+        {originalTotal > total && (
+          <p className="text-gray-400 line-through text-sm">
+            {originalTotal.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} ₺
+          </p>
+        )}
+
+        {/* yeni toplam */}
         <h2 className="text-2xl font-bold text-red-500">
-          {t(UI_TEXT.total)}: {total.toLocaleString("tr-TR")} ₺
+          {t(UI_TEXT.total)}:{" "}
+          {total.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })} ₺
         </h2>
       </div>
 
+      {/* PAYMENT */}
+      <div className="mt-6 bg-slate-50 rounded-3xl px-4 py-4 shadow">
+
+        <h2 className="font-semibold mb-3">
+          {t(UI_TEXT.paymentMethod)}
+        </h2>
+
+        <div className="flex flex-col gap-3">
+
+          <label htmlFor="iban" className="flex items-center gap-2">
+            <input
+              type="radio"
+              id="iban"
+              name="paymentMethod"
+              checked={paymentMethod === "iban"}
+              onChange={() => setPaymentMethod("iban")}
+            />
+            {t(UI_TEXT.payWithIban)}
+          </label>
+
+          <label htmlFor="kapida" className="flex items-center gap-2">
+            <input
+              type="radio"
+              id="kapida"
+              name="paymentMethod"
+              checked={paymentMethod === "kapida"}
+              onChange={() => setPaymentMethod("kapida")}
+            />
+            {t(UI_TEXT.payAtDoor)}
+          </label>
+
+        </div>
+      </div>
+
+      {/* IBAN */}
+      {paymentMethod === "iban" && (
+        <div className="mt-4 bg-yellow-100 p-4 rounded-3xl shadow">
+          <p className="font-semibold">
+            {t(UI_TEXT.ibanInfo)}
+          </p>
+          <p className="mt-2">
+            TR00 0000 0000 0000 0000 0000 00
+          </p>
+          <p className="mt-2 text-sm">
+            {t(UI_TEXT.ibanDescription)}
+          </p>
+        </div>
+      )}
+
+      {/* BUTTON */}
       <button
         onClick={handleOrder}
-        className="mt-6 w-full bg-lime-500 text-white font-bold py-3 rounded-3xl"
+        className="mt-6 bg-slate-50 shadow px-6 py-3 rounded-3xl hover:bg-white text-lime-500 font-bold"
       >
         {t(UI_TEXT.confirmOrder)}
       </button>
+
     </div>
   );
 }
