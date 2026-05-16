@@ -16,16 +16,19 @@ export default function Checkout() {
 
   const [paymentMethod, setPaymentMethod] = useState("iban");
 
+  // 🔥 SAFE TOTAL (CRASH FIX)
   const total = cart.reduce(
     (sum, item) =>
-      sum + (item.price || 0) * (item.quantity || 1),
+      sum +
+      ((item.price ?? item.productId?.price ?? 0) *
+        (item.quantity || 1)),
     0
   );
 
   const originalTotal = cart.reduce(
     (sum, item) =>
       sum +
-      ((item.originalPrice || item.price) *
+      (((item.originalPrice ?? item.productId?.price ?? item.price) || 0) *
         (item.quantity || 1)),
     0
   );
@@ -39,12 +42,13 @@ export default function Checkout() {
 
       const items = cart
         .map((item) => {
-          if (item._id && item.name && item.price) {
+          if (item._id && item.name) {
             return {
               productId: item._id,
               name: item.name,
-              price: item.price,
-              originalPrice: item.originalPrice || item.price,
+              price: item.price ?? item.productId?.price ?? 0,
+              originalPrice:
+                item.originalPrice ?? item.productId?.price ?? item.price ?? 0,
               quantity: item.quantity || 1,
             };
           }
@@ -53,9 +57,9 @@ export default function Checkout() {
             return {
               productId: item.productId._id,
               name: item.productId.name,
-              price: item.price || item.productId.price,
+              price: item.price ?? item.productId.price ?? 0,
               originalPrice:
-                item.originalPrice || item.productId.price,
+                item.originalPrice ?? item.productId.price ?? 0,
               quantity: item.quantity || 1,
             };
           }
@@ -113,48 +117,52 @@ export default function Checkout() {
         🧾 {t(UI_TEXT.orderSummary)}
       </h1>
 
-      {cart.map((item) => (
-        <div
-          key={item._id}
-          className="border-b py-3 px-3 flex justify-between items-center bg-slate-50 rounded-3xl shadow font-bold mb-2"
-        >
-          <div>
-            <span className="block">
-              {item.name} × {item.quantity}
+      {cart.map((item) => {
+        const price = item.price ?? item.productId?.price ?? 0;
+        const original = item.originalPrice ?? item.productId?.price ?? price;
+
+        return (
+          <div
+            key={item._id}
+            className="border-b py-3 px-3 flex justify-between items-center bg-slate-50 rounded-3xl shadow font-bold mb-2"
+          >
+            <div>
+              <span className="block">
+                {item.name} × {item.quantity}
+              </span>
+
+              {/* 🔥 NORMAL FİYAT (ÜSTÜ ÇİZİLİ) */}
+              {original > price && (
+                <span className="text-gray-400 line-through text-sm block">
+                  {original.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })} ₺
+                </span>
+              )}
+
+              {/* 🔥 İNDİRİM ETİKETİ */}
+              {original > price && (
+                <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  Kurban Bayramı İndirimi
+                </span>
+              )}
+            </div>
+
+            {/* 🔥 İNDİRİMLİ FİYAT (KIRMIZI) */}
+            <span className="text-red-500 font-bold text-lg">
+              {price.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} ₺
             </span>
-
-            {/* 🔥 ESKİ FİYAT (üstü çizili) */}
-            {item.originalPrice && (
-              <span className="text-gray-400 line-through text-sm block">
-                {item.originalPrice.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })} ₺
-              </span>
-            )}
-
-            {/* 🔥 İNDİRİM ETİKETİ */}
-            {item.originalPrice && (
-              <span className="inline-block mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                Kurban Bayramı İndirimi
-              </span>
-            )}
           </div>
+        );
+      })}
 
-          {/* 🔥 YENİ FİYAT */}
-          <span className="text-red-500 font-bold text-lg">
-            {item.price.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ₺
-          </span>
-        </div>
-      ))}
-
-      {/* 🔥 TOTAL */}
+      {/* TOTAL */}
       <div className="mt-4 bg-slate-50 rounded-3xl shadow px-4 py-4">
 
-        {/* eski toplam */}
         {originalTotal > total && (
           <p className="text-gray-400 line-through text-sm">
             {originalTotal.toLocaleString("en-US", {
@@ -164,7 +172,6 @@ export default function Checkout() {
           </p>
         )}
 
-        {/* yeni toplam */}
         <h2 className="text-2xl font-bold text-red-500">
           {t(UI_TEXT.total)}:{" "}
           {total.toLocaleString("en-US", {
@@ -183,22 +190,18 @@ export default function Checkout() {
 
         <div className="flex flex-col gap-3">
 
-          <label htmlFor="iban" className="flex items-center gap-2">
+          <label className="flex items-center gap-2">
             <input
               type="radio"
-              id="iban"
-              name="paymentMethod"
               checked={paymentMethod === "iban"}
               onChange={() => setPaymentMethod("iban")}
             />
             {t(UI_TEXT.payWithIban)}
           </label>
 
-          <label htmlFor="kapida" className="flex items-center gap-2">
+          <label className="flex items-center gap-2">
             <input
               type="radio"
-              id="kapida"
-              name="paymentMethod"
               checked={paymentMethod === "kapida"}
               onChange={() => setPaymentMethod("kapida")}
             />
@@ -214,10 +217,8 @@ export default function Checkout() {
           <p className="font-semibold">
             {t(UI_TEXT.ibanInfo)}
           </p>
-          <p className="mt-2">
-            TR00 0000 0000 0000 0000 0000 00
-          </p>
-          <p className="mt-2 text-sm">
+          <p>TR00 0000 0000 0000 0000 0000 00</p>
+          <p className="text-sm mt-2">
             {t(UI_TEXT.ibanDescription)}
           </p>
         </div>

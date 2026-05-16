@@ -56,14 +56,14 @@ export default function Cart() {
               <div>
                 <h3 className="font-bold">{item.name}</h3>
 
-                {/* 🔥 ESKİ FİYAT (üstü çizili) */}
+                {/* 🔴 NORMAL FİYAT (ÜSTÜ ÇİZİLİ) */}
                 {item.originalPrice && (
                   <p className="text-gray-400 line-through text-sm">
                     {item.originalPrice} ₺
                   </p>
                 )}
 
-                {/* 🔥 İNDİRİMLİ FİYAT */}
+                {/* 🔥 İNDİRİMLİ FİYAT (KIRMIZI) */}
                 <p className="text-red-500 font-bold">
                   {item.price} ₺ x {item.quantity}
                 </p>
